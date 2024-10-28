@@ -21,7 +21,9 @@ const FileList = () => {
         const fileData = response.data.map((file) => {
           let parsedMetadata = {};
           try {
+            console.log(" file.metadata", file.metadata);
             parsedMetadata = file.metadata ? JSON.parse(file.metadata) : {};
+            console.log("parsedMetadata", parsedMetadata);
           } catch (error) {
             console.error("Error parsing metadata:", error);
           }

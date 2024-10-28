@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { BiXCircle } from "react-icons/bi";
 import { FaClipboard, FaEye } from "react-icons/fa"; // Importing eye icon
-import axiosInstance from "../utils/axiosInstance";
+import { toast } from "react-toastify";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { BiXCircle } from "react-icons/bi";
-import { toast } from "react-toastify";
+import { Autoplay, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import axiosInstance from "../utils/axiosInstance";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
   const [viewMode, setViewMode] = useState("gallery");
   const [selectedFile, setSelectedFile] = useState(null);
-
+  console.log("files", files);
   useEffect(() => {
     const fetchFiles = async () => {
       try {

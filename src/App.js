@@ -1,25 +1,73 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Dashboard from "./components/Dashboard";
+import FileUpload from "./components/FileUpload";
+import FileList from "./components/FileList";
+import GuestLayout from "./components/layouts/GuestLayout";
+import AuthLayout from "./components/layouts/AuthLayout";
 
-function App() {
+// Route guard for protected routes
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" />;
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Router>
+      <Routes>
+        {/* Non-authenticated routes wrapped with GuestLayout */}
+        <Route
+          path="/login"
+          element={
+            <GuestLayout>
+              <Login />
+            </GuestLayout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestLayout>
+              <Register />
+            </GuestLayout>
+          }
+        />
+
+        {/* Authenticated routes wrapped with AuthLayout */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <AuthLayout />
+            </PrivateRoute>
+          }
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          {/* Nested routes for dashboard */}
+          <Route index element={<Dashboard />} />
+          <Route path="upload" element={<FileUpload />} />
+          <Route path="list" element={<FileList />} />
+        </Route>
+
+        {/* Redirect to dashboard if already authenticated */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Navigate to="/dashboard" />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance"; // Use axiosInstance
 import { toast } from "react-toastify";
 
 const Register = () => {
@@ -11,7 +11,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      await axiosInstance.post("/auth/register", {
         username,
         password,
       });
@@ -24,6 +24,7 @@ const Register = () => {
       );
     }
   };
+
   return (
     <div className="max-w-md mx-auto bg-white p-8 shadow-md rounded-md">
       <h2 className="text-2xl font-bold mb-4">Register</h2>

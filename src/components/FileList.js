@@ -40,8 +40,11 @@ const FileList = () => {
 
   const openFile = async (file) => {
     try {
-      await axiosInstance.post(`/files/${file.id}/view`);
-      file.views += 1;
+      const res = await axiosInstance.post(`/files/${file.id}/view`);
+
+      if (res.data.views) {
+        file.views = res.data.views;
+      }
       setSelectedFile(file);
     } catch (error) {
       console.error("Error updating view count:", error);

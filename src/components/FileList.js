@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BiXCircle } from "react-icons/bi";
-import { FaClipboard, FaEye } from "react-icons/fa"; // Importing eye icon
+import { FaClipboard, FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,7 +13,7 @@ const FileList = () => {
   const [files, setFiles] = useState([]);
   const [viewMode, setViewMode] = useState("gallery");
   const [selectedFile, setSelectedFile] = useState(null);
-  console.log("files", files);
+
   useEffect(() => {
     const fetchFiles = async () => {
       try {
@@ -36,7 +36,6 @@ const FileList = () => {
     fetchFiles();
   }, []);
 
-  // Function to open file in modal
   const openFile = async (file) => {
     try {
       await axiosInstance.post(`/files/${file.id}/view`);
@@ -47,30 +46,15 @@ const FileList = () => {
     }
   };
 
-  // Function to close modal
   const closeModal = () => {
     setSelectedFile(null);
   };
-  // Function to copy sharable link to clipboard
+
   const copyToClipboard = (link) => {
     navigator.clipboard.writeText(link);
     toast.success("Sharable link copied to clipboard!");
   };
-  // Swiper settings
-  // const sliderSettings = {
-  //   modules: [Navigation, Autoplay],
-  //   navigation: true,
-  //   autoplay: { delay: 3000, disableOnInteraction: false },
-  //   spaceBetween: 20,
-  //   loop: files.length > 1,
-  //   breakpoints: {
-  //     320: { slidesPerView: 1 }, // Mobile
-  //     640: { slidesPerView: 2 }, // Small screens
-  //     1024: { slidesPerView: 3 }, // Medium screens
-  //     1280: { slidesPerView: 4 }, // Large screens
-  //   },
-  //   className: "w-full mx-auto",
-  // };
+
   const sliderSettings = {
     modules: [Navigation, Autoplay],
     navigation: true,
@@ -81,11 +65,11 @@ const FileList = () => {
     loop: files.length > 1,
     className: "max-w-sm md:max-w-lg mx-auto",
   };
+
   return (
-    <div className="bg-white  p-6 rounded-md ">
+    <div className="bg-white p-6 rounded-md">
       <h2 className="text-2xl font-bold mb-4">Uploaded Files</h2>
 
-      {/* View Mode Toggle */}
       <div className="mb-4 flex gap-4">
         <button
           onClick={() => setViewMode("gallery")}
@@ -105,22 +89,21 @@ const FileList = () => {
         </button>
       </div>
 
-      {/* File List */}
       {viewMode === "gallery" ? (
         <Swiper {...sliderSettings}>
           {files.map((file) => (
             <SwiperSlide key={file.id}>
               <div className="relative group">
                 <div className="flex flex-col items-center">
-                  {file.metadata.mimeType?.startsWith("image") ? (
+                  {file.shareableLink.includes("uploads/images") ? (
                     <img
-                      src={`${file.shareableLink}`}
+                      src={file.shareableLink}
                       alt={file.filename}
                       className="w-full h-96 object-contain bg-gray-200 rounded-md shadow-md"
                     />
                   ) : (
                     <video
-                      src={`${file.shareableLink}`}
+                      src={file.shareableLink}
                       className="w-full h-96 object-contain bg-gray-200 rounded-md shadow-md"
                       controls
                     />
@@ -130,7 +113,6 @@ const FileList = () => {
                   </p>
                 </div>
 
-                {/* View Button */}
                 <button
                   onClick={() => openFile(file)}
                   className="absolute bottom-4 right-4 bg-blue-600 text-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -149,22 +131,21 @@ const FileList = () => {
               className="relative p-2 border rounded-md group"
               onClick={() => openFile(file)}
             >
-              {file.metadata.mimeType?.startsWith("image") ? (
+              {file.shareableLink.includes("uploads/images") ? (
                 <img
-                  src={`${file.shareableLink}`}
+                  src={file.shareableLink}
                   alt={file.filename}
                   className="w-full h-32 object-contain bg-gray-200 rounded-md shadow-md"
                 />
               ) : (
                 <video
-                  src={`${file.shareableLink}`}
+                  src={file.shareableLink}
                   className="w-full h-32 object-contain bg-gray-200 rounded-md shadow-md"
                   controls
                 />
               )}
               <p className="text-center mt-2 text-sm">{file.filename}</p>
 
-              {/* View Button */}
               <button
                 onClick={() => openFile(file)}
                 className="absolute bottom-2 right-2 bg-blue-600 text-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -176,7 +157,6 @@ const FileList = () => {
         </div>
       )}
 
-      {/* Modal for viewing file details */}
       {selectedFile && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded-md max-w-lg w-full relative">
@@ -190,15 +170,15 @@ const FileList = () => {
               <h2 className="text-2xl font-bold mb-4">
                 {selectedFile.filename}
               </h2>
-              {selectedFile.metadata.mimeType?.startsWith("image") ? (
+              {selectedFile.shareableLink.includes("uploads/images") ? (
                 <img
-                  src={`${selectedFile.shareableLink}`}
+                  src={selectedFile.shareableLink}
                   alt={selectedFile.filename}
                   className="w-full h-auto object-contain bg-gray-200 rounded-md"
                 />
               ) : (
                 <video
-                  src={`${selectedFile.shareableLink}`}
+                  src={selectedFile.shareableLink}
                   className="w-full h-auto object-contain bg-gray-200 rounded-md"
                   controls
                 />

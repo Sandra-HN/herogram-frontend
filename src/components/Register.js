@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -14,13 +15,15 @@ const Register = () => {
         username,
         password,
       });
-      alert("Registration successful. Please login.");
+      toast.success("Registration successful. Please login.");
       navigate("/login");
     } catch (error) {
-      alert("Registration failed.");
+      console.log("Error during registration:", error); // Log the error details
+      toast.error(
+        `Registration failed: ${error.response?.data?.error || error.message}`
+      );
     }
   };
-
   return (
     <div className="max-w-md mx-auto bg-white p-8 shadow-md rounded-md">
       <h2 className="text-2xl font-bold mb-4">Register</h2>

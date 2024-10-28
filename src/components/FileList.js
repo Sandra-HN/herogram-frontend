@@ -8,7 +8,7 @@ import "swiper/css/pagination";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import axiosInstance from "../utils/axiosInstance";
-
+import { debounce } from "lodash";
 const FileList = () => {
   const [files, setFiles] = useState([]);
   const [viewMode, setViewMode] = useState("gallery");
@@ -38,7 +38,7 @@ const FileList = () => {
     fetchFiles();
   }, []);
 
-  const openFile = async (file) => {
+  const openFile = debounce(async (file) => {
     try {
       const res = await axiosInstance.post(`/files/${file.id}/view`);
 
@@ -49,7 +49,7 @@ const FileList = () => {
     } catch (error) {
       console.error("Error updating view count:", error);
     }
-  };
+  }, 500); // Debounce for 500 ms
 
   const closeModal = () => {
     setSelectedFile(null);

@@ -18,18 +18,18 @@ const FileList = () => {
     const fetchFiles = async () => {
       try {
         const response = await axiosInstance.get("/files");
-        const fileData = response.data.map((file) => {
-          let parsedMetadata = {};
-          try {
-            console.log(" file.metadata", file.metadata);
-            parsedMetadata = file.metadata ? JSON.parse(file.metadata) : {};
-            console.log("parsedMetadata", parsedMetadata);
-          } catch (error) {
-            console.error("Error parsing metadata:", error);
-          }
-          return { ...file, metadata: parsedMetadata };
-        });
-        setFiles(fileData);
+        // const fileData = response.data.map((file) => {
+        //   let parsedMetadata = {};
+        //   try {
+        //     console.log(" file.metadata", file.metadata);
+        //     parsedMetadata = file.metadata ? JSON.parse(file.metadata) : {};
+        //     console.log("parsedMetadata", parsedMetadata);
+        //   } catch (error) {
+        //     console.error("Error parsing metadata:", error);
+        //   }
+        //   return { ...file, metadata: parsedMetadata };
+        // });
+        setFiles(response.data);
       } catch (error) {
         console.error("Error fetching files:", error);
       }
